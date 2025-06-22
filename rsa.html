@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>RSA Encryption Demo</title>
+  <link rel="stylesheet" href="css/rsa.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🔐 RSA Encryption & Decryption</h1>
+
+    <section>
+      <h2>What is RSA?</h2>
+      <p>
+        RSA (Rivest–Shamir–Adleman) is a public-key cryptographic algorithm used for secure data transmission.
+        Unlike Caesar Cipher, it uses TWO KEYS: a public key for encryption and a private key for decryption.
+      </p>
+      <p> In the simple way you can think of it like One is like an open door (the public key) that anyone can use to send you messages, and the other is the locked door (the private key) that only you have the key to. It's a lot safer than the Caesar Cipher, which is like just changing your front door to a different color and hoping no one notices.</p>
+
+      <h2>Why is it great?</h2>
+      <p>It's hard for anyone to guess your private key because it's based on tricky math (factoring large numbers).</p>
+    </section>
+
+<section>
+  <h2>Steps in RSA Algorithm:</h2>
+  <ol>
+    <li>
+      <strong>Choose Two Prime Numbers:</strong>
+      <p>Pick two distinct prime numbers, <strong>p</strong> and <strong>q</strong>. For example, let <code>p = 61</code> and <code>q = 53</code>.</p>
+    </li>
+    <li>
+      <strong>Compute n:</strong>
+      <p>Multiply these two numbers together to get <strong>n</strong>. 
+      <br>Formula: <code>n = p × q</code>. 
+      <br>Example: <code>n = 61 × 53 = 3233</code>.</p>
+    </li>
+    <li>
+      <strong>Calculate φ(n):</strong>
+      <p>Calculate <strong>φ(n)</strong> using the formula: <code>φ(n) = (p - 1) × (q - 1)</code>. 
+      <br>For our example: <code>φ(n) = (61 - 1)(53 - 1) = 60 × 52 = 3120</code>.</p>
+    </li>
+    <li>
+      <strong>Choose e:</strong>
+      <p>Pick a number <strong>e</strong> that is relatively prime to <strong>φ(n)</strong> (gcd(e, φ(n)) = 1). 
+      <br>Commonly, <code>e = 17</code> is a good choice. Check that <code>gcd(17, 3120) = 1</code>.</p>
+    </li>
+    <li>
+      <strong>Compute d:</strong>
+      <p>Find <strong>d</strong> such that <code>(d × e) mod φ(n) = 1</code>. 
+      <br>For instance, let’s say <code>d = 2753</code>. Check: <code>(2753 × 17) mod 3120 = 1</code>.</p>
+    </li>
+    <li>
+      <strong>Keys:</strong>
+      <p>Create your keys: 
+      <br>Public Key: <strong>(e, n)</strong> = <strong>(17, 3233)</strong>. 
+      <br>Private Key: <strong>(d, n)</strong> = <strong>(2753, 3233)</strong>. 
+      <br>Share the public key and keep the private key secret.</p>
+    </li>
+    <li>
+      <strong>To Encrypt:</strong>
+      <p>To send a message, the sender uses the public key to encrypt it using: 
+      <br><code>cipher = (message ^ e) mod n</code>. 
+      <br>If the message is <code>123</code>, then: <code>cipher = (123 ^ 17) mod 3233</code>.</p>
+    </li>
+    <li>
+      <strong>To Decrypt:</strong>
+      <p>The receiver uses the private key to decrypt the message with: 
+      <br><code>message = (cipher ^ d) mod n</code>.</p>
+    </li>
+  </ol>
+</section>
+
+
+    <section>
+      <h2>Try It Yourself</h2>
+
+      <label for="primeP">Prime Number <strong>p</strong>:</label>
+      <input type="number" id="primeP" placeholder="e.g., 61" />
+
+      <label for="primeQ">Prime Number <strong>q</strong>:</label>
+      <input type="number" id="primeQ" placeholder="e.g., 53" />
+
+      <button onclick="generateKeys()">Generate Keys</button>
+
+      <label for="rsaMessage">Enter message (text or encrypted numbers):</label>
+      <textarea id="rsaMessage" rows="3" placeholder="HELLO or cipher numbers"></textarea>
+
+      <div class="btn-group">
+        <button onclick="handleRSA('encrypt')">Encrypt</button>
+        <button onclick="handleRSA('decrypt')">Decrypt</button>
+      </div>
+
+      <div class="result-box" id="rsaResult">Result will appear here.</div>
+
+      <a href="index.html">← Back to Main Page</a>
+    </section>
+
+    <section>
+    <h2>Limitations of RSA</h2>
+    <ul>
+        <li><strong>Key Length:</strong> RSA keys need to be sufficiently long (typically 2048 bits or more) for strong security, which can result in slower performance.</li>
+        <li><strong>Computational Overhead:</strong> The encryption and decryption processes are computationally intensive, making them less suitable for encrypting large amounts of data directly.</li>
+        <li><strong>Vulnerability to Quantum Computers:</strong> RSA is potentially vulnerable to quantum computing attacks, which can factor large numbers quickly using Shor’s algorithm.</li>
+    </ul>
+
+    <h2>Applications of RSA</h2>
+    <ul>
+        <li><strong>Digital Signatures:</strong> RSA is commonly used in creating digital signatures, which verify the authenticity and integrity of a message or document.</li>
+        <li><strong>Secure Communication Protocols:</strong> It plays a critical role in protocols such as SSL/TLS that secure web communications.</li>
+        <li><strong>Email Encryption:</strong> Protocols like PGP (Pretty Good Privacy) use RSA to ensure secure email transmissions.</li>
+        <li><strong>Key Exchange:</strong> RSA is often used for securely exchanging symmetric keys, which can then be used for faster encryption of large data sets.</li>
+    </ul>
+</section>
+  </div>
+
+  <script type="module">
+    import { generateRSAKeys, rsaEncrypt, rsaDecrypt } from './js/rsa.js';
+
+    let publicKey = null;
+    let privateKey = null;
+
+    window.generateKeys = function () {
+      const p = parseInt(document.getElementById('primeP').value);
+      const q = parseInt(document.getElementById('primeQ').value);
+      const result = document.getElementById('rsaResult');
+
+      if (!p || !q || p <= 1 || q <= 1) {
+        result.innerText = '❌ Please enter valid prime numbers greater than 1.';
+        return;
+      }
+
+      try {
+        const keys = generateRSAKeys(p, q);
+        publicKey = keys.publicKey;
+        privateKey = keys.privateKey;
+        result.innerText =
+          `✅ Keys generated.\nPublic Key: (e=${publicKey.e}, n=${publicKey.n})\n` +
+          `Private Key: (d=${privateKey.d}, n=${privateKey.n})`;
+      } catch (err) {
+        result.innerText = '❌ Error: ' + err.message;
+      }
+    };
+
+    window.handleRSA = function (action) {
+      const input = document.getElementById('rsaMessage').value.trim();
+      const result = document.getElementById('rsaResult');
+
+      if (!publicKey || !privateKey) {
+        result.innerText = '⚠️ Please generate keys first.';
+        return;
+      }
+
+      try {
+        if (action === 'encrypt') {
+          const encrypted = rsaEncrypt(input, publicKey);
+          result.innerText = '🔐 Encrypted Message:\n' + encrypted;
+        } else if (action === 'decrypt') {
+          const decrypted = rsaDecrypt(input, privateKey);
+          result.innerText = '🔓 Decrypted Message:\n' + decrypted;
+        }
+      } catch (err) {
+        result.innerText = '❌ Error: ' + err.message;
+      }
+    };
+  </script>
+</body>
+</html>

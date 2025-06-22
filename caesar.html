@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Caesar Cipher</title>
+    <link rel="stylesheet" href="css/caesar.css">
+
+    <script src="js/caesar.js" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Caesar Cipher</h1>
+
+        <section>
+    <h2>What is Caesar Cipher?</h2>
+    <p>
+        The Caesar Cipher is one of the oldest and simplest encryption techniques. Julius Caesar used it to protect his military messages. It operates by replacing each letter in the plaintext with a letter a fixed number of positions down or up the alphabet.
+    </p>
+</section>
+
+<section>
+    <h2>How Does It Work?</h2>
+    <p>
+        The Caesar Cipher shifts each letter in a message by a fixed number of positions in the alphabet, known as the <strong>key</strong>. 
+        The key determines how many steps each letter will be shifted.
+    </p>
+    <ul>
+        <li>'A' becomes 'D' (with key = 3)</li>
+        <li>'B' becomes 'E'</li>
+        <li>'C' becomes 'F'</li>
+        <li>'HELLO' becomes 'KHOOR'</li>
+    </ul>
+    <p>
+        For example, if you have a key of 3, every letter in the original message is moved three places to the right. 
+        If the end of the alphabet is reached, it wraps around to the beginning (e.g., 'X' becomes 'A'). 
+        Keep in mind that spaces and punctuation remain unchanged.
+    </p>
+</section>
+
+        <section>
+            <h2>Encryption Steps</h2>
+            <ol>
+                <li>Pick a number (key), like 3</li>
+                <li>Shift each letter forward by the key</li>
+                <li>Wrap around if going past 'Z'</li>
+                <li>Leave spaces and punctuation unchanged</li>
+            </ol>
+
+            <h2>Decryption Steps</h2>
+            <ol>
+                <li>Use the same key</li>
+                <li>Shift each letter backward by the key</li>
+            </ol>
+        </section>
+        <hr>
+        <section>
+            <h2>Try It Yourself</h2>
+            <label>
+                Enter Text:
+                <input type="text" id="caesarText" placeholder="HELLO">
+            </label><br>
+            <label>
+                Key (number):
+                <input type="number" id="caesarKey" value="3">
+            </label><br><br>
+
+            <button onclick="handleCaesar('encrypt')">Encrypt</button>
+            <button onclick="handleCaesar('decrypt')">Decrypt</button>
+
+            <h3>Result:</h3>
+            <p id="caesarResult" class="result-box"></p>
+
+            <a href="index.html">← Back to Home</a>
+        </section>
+
+        <section>
+    <h2>Limitations of the Caesar Cipher</h2>
+    <ul>
+        <li><strong>Security:</strong> The Caesar cipher is relatively insecure by modern standards, as there are only 25 possible shifts (1 through 25), making it easy for attackers to brute-force it.</li>
+        <li><strong>Frequency Analysis:</strong> The predictable frequency of letters in a language makes it vulnerable to analysis. For example, in English, the letter 'E' is the most common. This can help cryptanalysts break the cipher quickly.</li>
+        <li><strong>Lack of Complexity:</strong> The cipher employs a simple substitution technique without additional complexities, making it insufficient for securing sensitive information in today's digital age.</li>
+        <li><strong>Short Key Space:</strong> The limited number of shifts means that an attacker can test all possibilities very quickly, rendering it ineffective for secure communications.</li>
+    </ul>
+</section>
+
+    </div>
+</body>
+</html>
